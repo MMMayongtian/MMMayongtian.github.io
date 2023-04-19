@@ -1,0 +1,810 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/avatar.png">
+  <link rel="icon" href="/img/avatar.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="MMMa">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="本文步骤中所使用的环境： 12345版本: PyTorch GPU @cuda11.6系统: Windows10显卡: GTX1650cuda版本: release 11.6, V11.6.112conda版本: conda 23.1.0 版本检查 Python版本 版本都是对应的，很有可能某一步版本有差别就会出问题，我使用的 python 环境是 3.8，若想使用其他版本请移步其他博客参考. 有">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PyTorch安装 [Windows10&#x2F;cuda11.6]">
+<meta property="og:url" content="http://example.com/2023/04/19/Pytorch%E5%AE%89%E8%A3%85/index.html">
+<meta property="og:site_name" content="MMMa">
+<meta property="og:description" content="本文步骤中所使用的环境： 12345版本: PyTorch GPU @cuda11.6系统: Windows10显卡: GTX1650cuda版本: release 11.6, V11.6.112conda版本: conda 23.1.0 版本检查 Python版本 版本都是对应的，很有可能某一步版本有差别就会出问题，我使用的 python 环境是 3.8，若想使用其他版本请移步其他博客参考. 有">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2023/04/19/Pytorch%E5%AE%89%E8%A3%85/pic1.png">
+<meta property="og:image" content="http://example.com/2023/04/19/Pytorch%E5%AE%89%E8%A3%85/pic2.png">
+<meta property="og:image" content="http://example.com/2023/04/19/Pytorch%E5%AE%89%E8%A3%85/pic3.png">
+<meta property="og:image" content="http://example.com/2023/04/19/Pytorch%E5%AE%89%E8%A3%85/pic4.png">
+<meta property="og:image" content="http://example.com/2023/04/19/Pytorch%E5%AE%89%E8%A3%85/pic5.png">
+<meta property="og:image" content="http://example.com/2023/04/19/Pytorch%E5%AE%89%E8%A3%85/pic6.png">
+<meta property="og:image" content="http://example.com/2023/04/19/Pytorch%E5%AE%89%E8%A3%85/pic7.png">
+<meta property="og:image" content="http://example.com/2023/04/19/Pytorch%E5%AE%89%E8%A3%85/pic8.png">
+<meta property="og:image" content="http://example.com/2023/04/19/Pytorch%E5%AE%89%E8%A3%85/pic9.png">
+<meta property="article:published_time" content="2023-04-19T03:22:38.000Z">
+<meta property="article:modified_time" content="2023-04-19T07:47:57.626Z">
+<meta property="article:author" content="MMMa">
+<meta property="article:tag" content="Pytorch">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2023/04/19/Pytorch%E5%AE%89%E8%A3%85/pic1.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>PyTorch安装 [Windows10/cuda11.6] - MMMa</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>MMMa</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="PyTorch安装 [Windows10/cuda11.6]"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-04-19 11:22" pubdate>
+          2023年4月19日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          35 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">PyTorch安装 [Windows10/cuda11.6]</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>本文步骤中所使用的环境：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs text">版本: PyTorch GPU @cuda11.6<br>系统: Windows10<br>显卡: GTX1650<br>cuda版本: release 11.6, V11.6.112<br>conda版本: conda 23.1.0<br></code></pre></td></tr></table></figure>
+<h2 id="版本检查">版本检查</h2>
+<h3 id="Python版本">Python版本</h3>
+<p>版本都是对应的，很有可能某一步版本有差别就会出问题，我使用的 python 环境是 3.8，若想使用其他版本请移步其他博客参考.</p>
+<h4 id="有-Conda">有 Conda</h4>
+<p>直接使用 conda 创建一个新的 python 虚拟环境即可，python 版本选择 3.8 (本文直接使用默认的版本3.8.16, 不确定是否有影响).</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">conda update conda<br>conda create -n your_env_name python=3.8<br><span class="hljs-meta prompt_"># </span><span class="language-bash">例如 conda create  -n py38-gpu python=3.8</span><br></code></pre></td></tr></table></figure>
+<h4 id="无-Conda">无 Conda</h4>
+<p>无 Conda 的话建议下一个 Anaconda 😄, 后续可以出 Anaconda 的安装教程.</p>
+<p>不想下 Conda 也可选择重新装 python 环境，或者移步其他版本合适的博客，在命令行中输入如下命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">python -V<br></code></pre></td></tr></table></figure>
+<p>本人使用的是 Pyhton 3.8.16，尽可能也选择一样的版本，或者 python 3.8，否则后续步骤可能有略微差异，不能保证后续无错误.</p>
+<p><img src="/2023/04/19/Pytorch%E5%AE%89%E8%A3%85/pic1.png" srcset="/img/loading.gif" lazyload alt="Python版本"></p>
+<h3 id="Cuda-版本">Cuda 版本</h3>
+<p>如果你的显卡是 AMD/ATI 那可以退出本篇了😆 ，A 卡不支持 CUDA 。</p>
+<p>我的显卡是 NVIDIA GeForce GTX 1650 4GB ( 菜的一批，写写课程作业得了😢 )</p>
+<p>在终端中输入<code>nvidia-smi</code> 查看 CUDA 版本，如下图显示 CUDA Version：11.6</p>
+<p><img src="/2023/04/19/Pytorch%E5%AE%89%E8%A3%85/pic2.png" srcset="/img/loading.gif" lazyload alt="Cuda版本"></p>
+<p>如果 <code>nvidia-smi</code> 无法查看，可能是显卡太古老或者是显卡驱动有问题，更新一下显卡驱动试试看 (<s>虽然更新可能会出现负优化的情况😆</s>)。</p>
+<p>如果还未安装 CUDA，可以去官网查一下 CUDA Toolkit 所需最低驱动程序版本，查看自己的显卡驱动是否支持 CUDA 11.6，若符合的话去官网安装 CUDA Tooolkit 和 对应版本的 cuDNN 即可。</p>
+<p>如下表格 Windows x86_64 系统只要显卡驱动版本不低于 452.39 即可安装 CUDA 11.6。</p>
+<table>
+<thead>
+<tr>
+<th>CUDA Toolkit</th>
+<th>Minimum Required Driver Version for CUDA Minor Version Compatibility*</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td>Linux x86_64 Driver Version</td>
+<td>Windows x86_64 Driver Version</td>
+</tr>
+<tr>
+<td>CUDA 12.1.x</td>
+<td>&gt;=525.60.13</td>
+<td>&gt;=527.41</td>
+</tr>
+<tr>
+<td>CUDA 12.0.x</td>
+<td>&gt;=525.60.13</td>
+<td>&gt;=527.41</td>
+</tr>
+<tr>
+<td>CUDA 11.8.x</td>
+<td>&gt;=450.80.02</td>
+<td>&gt;=452.39</td>
+</tr>
+<tr>
+<td>CUDA 11.7.x</td>
+<td>&gt;=450.80.02</td>
+<td>&gt;=452.39</td>
+</tr>
+<tr>
+<td>CUDA 11.6.x</td>
+<td>&gt;=450.80.02</td>
+<td>&gt;=452.39</td>
+</tr>
+<tr>
+<td>CUDA 11.5.x</td>
+<td>&gt;=450.80.02</td>
+<td>&gt;=452.39</td>
+</tr>
+<tr>
+<td>CUDA 11.4.x</td>
+<td>&gt;=450.80.02</td>
+<td>&gt;=452.39</td>
+</tr>
+<tr>
+<td>CUDA 11.3.x</td>
+<td>&gt;=450.80.02</td>
+<td>&gt;=452.39</td>
+</tr>
+<tr>
+<td>CUDA 11.2.x</td>
+<td>&gt;=450.80.02</td>
+<td>&gt;=452.39</td>
+</tr>
+<tr>
+<td>CUDA 11.1 (11.1.0)</td>
+<td>&gt;=450.80.02</td>
+<td>&gt;=452.39</td>
+</tr>
+<tr>
+<td>CUDA 11.0 (11.0.3)</td>
+<td>&gt;=450.36.06**</td>
+<td>&gt;=451.22**</td>
+</tr>
+</tbody>
+</table>
+<h2 id="开始安装PyTorch">开始安装PyTorch</h2>
+<p>直接去<a target="_blank" rel="noopener" href="https://pytorch.org">官网</a>，点击 Install，然后选择相应的版本，如下图可以看到会给出一个安装命令，~~直接在命令行输入该命令即可完成PyTorch+cuDNN+torchvision全部的安装！~~当然要是这么简单的话就好了😢，直接下载的话非常非常的慢，除非你的网络可以流畅的访问外网…</p>
+<p><img src="/2023/04/19/Pytorch%E5%AE%89%E8%A3%85/pic3.png" srcset="/img/loading.gif" lazyload alt="Pytorch官网安装"></p>
+<p>当然还有一个问题就是这个页面中竟然没有 CUDA 11.6 的选项😭，但是没有关系我们可以点击图中表格上方的 <font color="red">install previous verisons of PyTorch</font> 选项在历史版本中找到 CUDA 11.6 对应的 Pytorch 版本：</p>
+<p><img src="/2023/04/19/Pytorch%E5%AE%89%E8%A3%85/pic4.png" srcset="/img/loading.gif" lazyload alt="历史版本"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">pip install torch==1.13.1+cu116 torchvision==0.14.1+cu116 torchaudio==0.13.1 --extra-index-url https://download.pytorch.org/whl/cu116<br></code></pre></td></tr></table></figure>
+<p>很好现在回到我们访问外网下载龟速的问题上，<s>如果不在国外，又不想使用魔法的话</s>，直接在浏览器中打开安装命令后面的网址 <a target="_blank" rel="noopener" href="https://download.pytorch.org/whl/cu116%EF%BC%8C%E6%89%93%E5%BC%80%E5%90%8E%E7%95%8C%E9%9D%A2%E5%A6%82%E4%B8%8B%EF%BC%9A">https://download.pytorch.org/whl/cu116，打开后界面如下：</a></p>
+<p><img src="/2023/04/19/Pytorch%E5%AE%89%E8%A3%85/pic5.png" srcset="/img/loading.gif" lazyload alt="Pytorch组件"></p>
+<p>再次回到刚刚的安装命令，可以看到我们需要安装 torch、torchvision、torchaudio 这三个东西：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">pip install torch==1.13.1+cu116 torchvision==0.14.1+cu116 torchaudio==0.13.1 --extra-index-url https://download.pytorch.org/whl/cu116<br></code></pre></td></tr></table></figure>
+<p>分别点击相应的链接，找到相应的版本下载即可。</p>
+<p>首先是 torch， 点击之后进入到新页面可以看到很多.whl后缀的文件，现在我们就需要根据自己的环境来选择合适的版本，例如我的环境是：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs makefile"><span class="hljs-section">CUDA版本:11.6</span><br><span class="hljs-section">Python版本:3.8</span><br><span class="hljs-section">操作系统版本:Win10</span><br><span class="hljs-section">处理器:AMD R7-4800H 64位</span><br></code></pre></td></tr></table></figure>
+<p>即对应可以下载如下图的版本 (可以直接 <code>CTRL + F</code> 搜索)：</p>
+<p><img src="/2023/04/19/Pytorch%E5%AE%89%E8%A3%85/pic6.png" srcset="/img/loading.gif" lazyload alt="对应torch版本"></p>
+<p><strong>其中 torch-1.12.0 就是 torch 的版本，cu116 就是 cuda 版本，cp38 就是 Python的版本，win_amd64 就是 64 位 windows 系统。</strong></p>
+<p>点击该链接就会开始下载，当然如果直接使用浏览器网页下载可能依旧会很慢，并且网络较差文件比较大的时候很有可能出问题导致下载失败，这个时候我们可以选择使用下载器来下载，找个好用的下载器 ( 正经下载器，例如迅雷 )，复制链接下载即可。</p>
+<p>之后的 torchvision 和 torchaudio 同理，按照刚才我们说的命名方式，找到合适的版本，然后下载即可，全部下载完之后就可以开始安装了。</p>
+<h3 id="手动安装">手动安装</h3>
+<p>以 pip 为例我们只需要指定安装包的路径即可，找到我们下载的 <code>*.whl</code> 文件目录，在文件夹的目录栏输入 <code>cmd</code> 后点击回车即可快速打开一个当前目录下的命令行：</p>
+<p><img src="/2023/04/19/Pytorch%E5%AE%89%E8%A3%85/pic7.png" srcset="/img/loading.gif" lazyload alt="当前目录下打开cmd"></p>
+<p>也可以 <code>Win + R</code> 输入 <code>cmd</code> 打开命令行之后转过，总之在该目录下打开一个终端即可。</p>
+<p>之后执行命令 <code>pip install ./安装包名字.whl</code> 即可安装，例如 <code>pip install ./torch-1.12.0+cu116-cp38-cp38-win_amd64.whl</code> ，同理其他的安装包也是这样安装。</p>
+<h2 id="检验是否成功">检验是否成功</h2>
+<p>使用 Python (注意如果用的是 conda，记得切换到对应的虚拟环境) 执行如下代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-built_in">print</span>(torch.__version__)<br><span class="hljs-built_in">print</span>(torch.cuda.is_available())<br></code></pre></td></tr></table></figure>
+<p><img src="/2023/04/19/Pytorch%E5%AE%89%E8%A3%85/pic8.png" srcset="/img/loading.gif" lazyload alt="检验Pytorch版本"></p>
+<p>如果得到如图所示的输出，那么说明安装成功，可以愉快地使用 GPU 进行计算了！</p>
+<p>如果没有出现 cuxxx 且打印了 False 那说明安装出了问题，重新过一遍步骤看是否有遗漏有差错吧…</p>
+<h3 id="跑个程序测试下">跑个程序测试下</h3>
+<p>以防万一，我们可以随便找一个测试程序运行一下看看是否真的使用 GPU 进行计算。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><code class="hljs python3">import torch<br>import time<br>from torch import autograd<br><br>print(torch.__version__)<br>print(torch.cuda.is_available())<br><br>a = torch.randn(10000,5000)<br>b = torch.randn(5000,10000)<br><br><br>print(&quot;device\t\tLoadData Time\tComputing time\tTotal time&quot;)<br># # 设备选择 cpu<br>device = torch.device(&#x27;cpu&#x27;)<br># 加载数据<br>beginTime = time.time()<br>a = a.to(device)<br>b = b.to(device)<br>endTime = time.time()<br>loadTime = endTime - beginTime<br># 计算矩阵<br>beginTime = time.time()<br>c = torch.matmul(a,b)<br>endTime = time.time()<br>calTime = endTime - beginTime<br><br>totalTime = loadTime + calTime<br>print(device,&quot;\t\t%.5f\t\t%.5f\t\t%.5f&quot;%(loadTime,calTime,totalTime))<br><br><br># 设备选择 gpu<br>device = torch.device(&#x27;cuda&#x27;)<br># 加载数据<br>beginTime = time.time()<br>a = a.to(device)<br>b = b.to(device)<br>endTime = time.time()<br>loadTime = endTime - beginTime<br># 计算矩阵<br>beginTime = time.time()<br>c = torch.matmul(a,b)<br>endTime = time.time()<br>calTime = endTime - beginTime<br><br>totalTime = loadTime + calTime<br><br>print(device,&quot;\t\t%.5f\t\t%.5f\t\t%.5f&quot;%(loadTime,calTime,totalTime))<br></code></pre></td></tr></table></figure>
+<p>运行后如果电脑<s>突然燃起来🔥</s>，散热风扇开始疯狂转，说明已经在工作，如下图是我的电脑运行后的结果：</p>
+<p><img src="/2023/04/19/Pytorch%E5%AE%89%E8%A3%85/pic9.png" srcset="/img/loading.gif" lazyload alt="程序运行结果"></p>
+<p>可以看到 cuda 加载数据 (使用显卡时需要将数据加载到显存中 ) 耗时较久，但计算时间相比 cpu 快很多。因此对于 I/O 密集型程序，用 cpu 可能好一些；而对于计算密集型程序，使用显卡或许会有奇效。</p>
+<h2 id="安装完成">安装完成</h2>
+<p>安装成功！开始 coding !😆</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Pytorch/">#Pytorch</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>PyTorch安装 [Windows10/cuda11.6]</div>
+      <div>http://example.com/2023/04/19/Pytorch安装/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>MMMa</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年4月19日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/04/11/WanwanWork/" title="WanwanWork">
+                        <span class="hidden-mobile">WanwanWork</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#gitalk-container', function() {
+      Fluid.utils.createCssLink('/css/gitalk.css')
+      Fluid.utils.createScript('https://lib.baomitu.com/gitalk/1.8.0/gitalk.min.js', function() {
+        var options = Object.assign(
+          {"clientID":"85527784e74afea0fb2a","clientSecret":"918e8539b29dafd014be7a0287db76310afc1232","repo":"https://github.com/MMMayongtian/MMMayongtian.github.io","owner":"MMMayongtian","admin":["name"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
+          {
+            id: '9eb027ec0e59700919186af45e37d44e'
+          }
+        )
+        var gitalk = new Gitalk(options);
+        gitalk.render('gitalk-container');
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
